@@ -110,7 +110,6 @@ function calc() {
   $("valid").textContent = schedule.valid ? "Payment split totals 100%." : "Payment split is " + schedule.percentageTotal + "%; it must equal 100%.";
   $("paymentWarning").hidden = schedule.valid;
   $("print").disabled = !schedule.valid;
-  $("export").disabled = !schedule.valid;
   $("pvproject").textContent = $("project").value.trim() || "Your project estimate";
   $("pvclient").textContent = $("client").value.trim() || "Client";
   $("pvprepared").textContent = "Prepared by " + ($("prepared").value.trim() || "—");
@@ -172,6 +171,8 @@ function clearDraft() {
   for (const key of fields) $(key).value = fresh.fields[key];
   drawItems();
   drawPayments();
+  clearTimeout(saveTimer);
+  try { localStorage.removeItem(STORAGE_KEY); } catch { /* storage may be unavailable */ }
   announce("Draft cleared. A new estimate is ready.");
 }
 
