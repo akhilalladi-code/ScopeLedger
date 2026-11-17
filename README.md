@@ -1,130 +1,60 @@
 # ScopeLedger
 
-**Creative project estimates, made clear.** ScopeLedger is a local-first quote builder for freelance designers, creative studios and small marketing teams. Turn a list of deliverables into a transparent estimate with line-item pricing, configurable adjustments, payment milestones and a client-ready document.
-
-ScopeLedger fills the step between a creative brief and production: **what is included, how much it costs, when it is due, and what is outside the scope.** It is intentionally separate from a brief-writing tool or a full project-management system.
-
-## Why ScopeLedger?
-
-A project can have a clear brief and still begin with an unclear quote. Vague package prices make revisions, exclusions and payment expectations harder to discuss. ScopeLedger makes the commercial side of a creative handoff explicit without requiring an account, a paid service or a cloud database.
+**Creative project estimates, made clear.** ScopeLedger is a local-first estimate builder for freelance designers, creative studios and small marketing teams. It turns creative deliverables into a transparent quote with item pricing, discount and tax calculations, payment milestones, scope notes and a printable client preview.
 
 ## Features
 
-- **Line-item estimates:** describe each deliverable, quantity, unit and rate.
-- **Starter scopes:** brand identity, social campaign, brochure / print and creator launch packs. These are editable starting points, not fixed market prices.
-- **Transparent totals:** subtotal, percentage or fixed discount, taxable amount, configurable tax rate and estimated total.
-- **Payment milestones:** set named milestones and percentages; the tool checks that they add up to 100% and reconciles the final rounded amount.
-- **Client-ready preview:** project details, validity, turnaround, scope, pricing, payment schedule, inclusions, exclusions and terms.
-- **Print / PDF:** use the browser's print dialog to save a clean A4 estimate as PDF.
-- **Portable JSON:** export a draft for backup or import it in another browser.
-- **Autosave:** the current draft is stored in this browser's `localStorage`.
-- **Privacy by default:** calculations and imports run locally; there is no account, backend, API key, analytics SDK or upload endpoint.
-- **No runtime dependencies:** built with browser APIs and the Node.js standard library.
+- Editable deliverables with quantity, rate and calculated line totals.
+- Starter scopes for brand identity and social campaigns.
+- Subtotal, percentage discount, tax and estimate total.
+- Editable payment milestones with a 100% allocation check.
+- Live client-facing estimate preview.
+- Browser print / Save as PDF.
+- JSON export for portable backups.
+- Local browser autosave; no account, backend, API key, analytics or file upload.
+- Responsive layout and no runtime dependencies.
 
 ## Quick start
 
-Requirements: Node.js 20 or newer.
+No build step or package installation is required. Clone the repository and open `index.html` in a modern browser, or serve the folder with any static HTTP server:
 
 ```bash
 git clone https://github.com/akhilalladi-code/ScopeLedger.git
 cd ScopeLedger
-npm run dev
+python -m http.server 8000
 ```
 
-Open [http://127.0.0.1:4175](http://127.0.0.1:4175).
-
-You can also serve the static files with any local HTTP server. A local server is recommended because the app uses JavaScript modules.
+Visit [http://localhost:8000](http://localhost:8000).
 
 ## How to use
 
-1. Choose **Example** to inspect a complete illustrative estimate, or start with the blank workspace.
-2. Add the project name, client, estimate dates, turnaround and currency.
-3. Add deliverables manually or choose an editable starter scope.
-4. Enter a quantity, unit and rate for each line item.
-5. Add a discount or tax rate only when applicable. ScopeLedger does not choose a tax rate for you.
-6. Adjust the payment milestones so their percentages total exactly 100%.
-7. Write down what is included, what is excluded and any assumptions or payment terms.
-8. Review the live client preview, then choose **Print quote** and save as PDF.
-9. Export JSON to keep an editable backup or move the estimate to another browser.
+1. Enter the project, client, preparer and currency.
+2. Add deliverables manually or load a starter scope.
+3. Enter quantities and rates; the estimate recalculates as you edit.
+4. Set a percentage discount and tax rate where applicable.
+5. Adjust payment milestones. Their percentages should total 100%.
+6. Add inclusions, exclusions and terms so the scope is explicit.
+7. Review the client preview and use **Print / Save PDF**.
+8. Export JSON to keep a portable copy of the estimate.
 
-The initial workspace is intentionally blank. Starter-scope buttons add editable line items; they do not claim to be market rates. Replace every name, quantity and rate with the details of the actual project.
-
-## Quality checks
-
-```bash
-npm test
-npm run check
-```
-
-Tests use Node's built-in test runner. No test framework or dependency installation is required.
+Starter items and example rates are illustrative only. Replace them with the actual agreed scope and pricing.
 
 ## Data and privacy
 
-- Drafts are stored under the `scopeledger.estimate.v1` key in this browser's local storage.
-- Export JSON before clearing site data or changing browsers; browser storage is not a backup service.
-- Imported JSON is limited to 1 MB and normalized to the supported version-1 fields.
-- The application does not upload project or client details. The development server binds to `127.0.0.1` only.
-- Do not put sensitive personal, financial or confidential information into an estimate unless your own device and browser storage are appropriate for it.
+The current draft is saved in this browser's local storage. Export JSON before clearing site data or moving to another browser. Imported data is validated for the supported version and bounded collection sizes. The app does not transmit estimate details to a server.
 
 ## Calculation rules
 
-- Each line amount is `quantity × rate`, rounded to two decimal places.
-- Percentage discounts are calculated against the subtotal. Fixed discounts cannot reduce the taxable amount below zero.
-- Tax is calculated on the subtotal after discount using the rate entered by the user.
-- Payment amounts are calculated from the estimate total. The last milestone absorbs any rounding remainder so the displayed allocations reconcile to the total.
-- The currency selector changes display formatting; it does not perform currency conversion.
+- Each line total is quantity multiplied by rate.
+- The discount is percentage-based and capped at the subtotal.
+- Tax is applied to the subtotal after discount using the rate entered by the user.
+- Payment allocations are calculated from the final total; the final milestone absorbs rounding differences.
 
-## Important limitations
+The currency selector changes formatting only; it does not convert currencies.
 
-- ScopeLedger is an estimating and document-preparation aid, not accounting, legal or tax advice.
-- Tax treatment, invoicing requirements, withholding, statutory disclosures and contract terms vary by jurisdiction and transaction. Confirm the correct treatment with a qualified professional before issuing a formal quote.
-- Starter scopes and sample rates are illustrative. They are not market benchmarks or recommendations.
-- A printed estimate is not automatically a signed contract, invoice, purchase order or proof of payment.
-- The app does not send quotes, collect signatures, accept payments, manage clients, track time, or sync data between devices.
-- A browser's print-to-PDF output may vary slightly by browser and printer settings. Review the PDF before sending it.
+## Limitations
 
-## Project structure
-
-```text
-scopeledger/
-├── .github/workflows/
-│   ├── ci.yml
-│   └── pages.yml
-├── docs/
-│   ├── RELEASE-CHECKLIST.md
-│   └── REPOSITORY-SETUP.md
-├── src/
-│   ├── app.js
-│   ├── core.js
-│   └── styles.css
-├── tests/
-│   └── core.test.js
-├── index.html
-├── server.mjs
-├── package.json
-├── SECURITY.md
-├── CONTRIBUTING.md
-├── LICENSE
-└── README.md
-```
-
-## Deploy to GitHub Pages
-
-The included `pages.yml` workflow publishes the repository root as a static GitHub Pages site after a push to `main` or a manual workflow dispatch.
-
-1. Open **Settings → Pages** and choose **GitHub Actions** as the build and deployment source.
-2. Push to `main` or run the **Deploy ScopeLedger to GitHub Pages** workflow.
-3. Wait for the Pages deployment workflow to complete. GitHub will show the live URL in **Settings → Pages**.
-
-No build step is needed; the site is static. The deployment workflow has Pages-scoped permissions and does not need repository secrets.
-
-## Contributing
-
-See [CONTRIBUTING.md](CONTRIBUTING.md). Please add tests for calculation and validation changes, keep the local-first default, and document any new data collection or external service.
-
-## Security
-
-See [SECURITY.md](SECURITY.md) for responsible vulnerability reporting and the application's data-handling boundaries.
+ScopeLedger is an estimating aid, not accounting, legal or tax advice. Confirm tax treatment and contract terms with a qualified professional. A printed estimate is not automatically a signed contract, invoice or proof of payment. The app does not send quotes, collect signatures, accept payments, manage clients or sync data across devices.
 
 ## License
 
