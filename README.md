@@ -7,16 +7,17 @@
 - Editable deliverables with quantity, rate and calculated line totals.
 - Starter scopes for brand identity and social campaigns.
 - Subtotal, percentage discount, tax and estimate total.
-- Editable payment milestones with a 100% allocation check.
+- Payment milestones with strict 100% allocation validation.
 - Live client-facing estimate preview.
-- Browser print / Save as PDF.
-- JSON export for portable backups.
-- Local browser autosave; no account, backend, API key, analytics or file upload.
-- Responsive layout and no runtime dependencies.
+- Browser print / Save as PDF with editor controls excluded from print.
+- JSON export for portable backups, including when a payment split needs correction.
+- Local browser autosave, bounded draft validation and an explicit Clear draft action.
+- Responsive, keyboard-accessible interface with no runtime dependencies.
+- Automated calculation tests and Chromium browser regression tests in GitHub Actions.
 
 ## Quick start
 
-No build step or package installation is required. Clone the repository and open `index.html` in a modern browser, or serve the folder with any static HTTP server:
+The app is static and has no build step. Clone the repository and serve the folder with any static HTTP server:
 
 ```bash
 git clone https://github.com/akhilalladi-code/ScopeLedger.git
@@ -32,23 +33,37 @@ Visit [http://localhost:8000](http://localhost:8000).
 2. Add deliverables manually or load a starter scope.
 3. Enter quantities and rates; the estimate recalculates as you edit.
 4. Set a percentage discount and tax rate where applicable.
-5. Adjust payment milestones. Their percentages should total 100%.
+5. Adjust payment milestones. Their percentages must total exactly 100% before the client estimate can be printed.
 6. Add inclusions, exclusions and terms so the scope is explicit.
 7. Review the client preview and use **Print / Save PDF**.
-8. Export JSON to keep a portable copy of the estimate.
+8. Export JSON to keep a portable copy. Use **Clear draft** to remove the saved browser draft.
 
 Starter items and example rates are illustrative only. Replace them with the actual agreed scope and pricing.
 
+## Development and tests
+
+Node.js 22 or later is recommended for development checks:
+
+```bash
+npm install
+npm run check
+npm test
+npx playwright install chromium
+npm run test:e2e
+```
+
+The unit tests cover pricing, rounding, payment validation and draft normalization. Playwright exercises the main browser flows in Chromium. GitHub Actions runs both suites for pull requests and non-main branch pushes. The app itself still runs without Node.js or npm.
+
 ## Data and privacy
 
-The current draft is saved in this browser's local storage. Export JSON before clearing site data or moving to another browser. Imported data is validated for the supported version and bounded collection sizes. The app does not transmit estimate details to a server.
+The current draft is saved in this browser's local storage. Export JSON before clearing site data or moving to another browser. Draft loading validates the supported schema, bounds field lengths and collection sizes, and clamps numeric inputs. The app does not transmit estimate details to a server. Browser local storage is not encrypted by ScopeLedger; use a trusted device and manage browser access accordingly.
 
 ## Calculation rules
 
 - Each line total is quantity multiplied by rate.
 - The discount is percentage-based and capped at the subtotal.
 - Tax is applied to the subtotal after discount using the rate entered by the user.
-- Payment allocations are calculated from the final total; the final milestone absorbs rounding differences.
+- Payment allocations are based on the final estimate total. The percentages must total 100%; only the final milestone absorbs cent-rounding differences after validation.
 
 The currency selector changes formatting only; it does not convert currencies.
 
