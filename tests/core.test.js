@@ -9,7 +9,7 @@ test("payment schedule allocates exact total for a valid 50/50 split", () => {
   const result = calculatePayments(101.01, [{ title: "Start", percent: 50 }, { title: "Finish", percent: 50 }]);
   assert.equal(result.valid, true);
   assert.deepEqual(result.allocations.map(x => x.amount), [50.51, 50.5]);
-  assert.equal(result.allocations.reduce((n, x) => n + x.amount, 0), 101.01);
+  assert.equal(Math.round(result.allocations.reduce((n, x) => n + x.amount, 0) * 100) / 100, 101.01);
 });
 test("rejects under- and over-allocated payment schedules", () => {
   assert.equal(calculatePayments(100, [{ title: "Only", percent: 20 }]).valid, false);
